@@ -15,31 +15,44 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build_and_publish:
+  push:
+    name: "yolks:java_${{ matrix.tag }}"
     runs-on: ubuntu-latest
+    strategy: 
+      # if one matrix job fails, the others do not automatically stop (default true)
+      fail-fast: false
+      # github-defined keyword allowing multiple parallel jobs to run (within concurrency limits)
+      matrix:
+        # user-defined word "tag", could be anything e.g. "version" or "dir", the values of which
+        # are referred to by "${{ matrix.tag }}"
+        tag:
+          - jbr_21
     steps:
       - uses: actions/checkout@v4
-      - name: Build and publish the image
-        run: |
-          docker login --username ${{ github.repository_owner }} --password ${{ secrets.GHCR_TOKEN }} ghcr.io
-          docker build ./java/jbr_21 --tag ghcr.io/braekpo1nt/jbr_java_21:latest
-          docker push ghcr.io/braekpo1nt/jbr_java_21:latest
-  # # This workflow contains a single job called "build"
-  # build:
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
+      - name: Docker Setup QEMU
+        # Install and configure QEMU to enable building images for multiple architectures
+        # (e.g., linux/arm64) on GitHub-hosted amd64 runners
+        uses: docker/setup-qemu-action@v3.6.0
+      - name: Docker Setup Buildx
+        # Set up Docker Buildx for advanced multi-platform builds and BuildKit features
+        uses: docker/setup-buildx-action@v3.11.1
+        with:
+          buildkitd-flags: --debug
+      - name: Docker Login
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Build and push Docker images
+        # Build and push multi-architecture Docker images to the registry using Buildx
+        uses: docker/build-push-action@v6.18.0
+        with:
+          # Build's context is the set of files located in the specified PATH or URL
+          context: ./java
+          file: ./java/${{ matrix.tag }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/braekpo1nt/yolks:java_${{ matrix.tag }}
 
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v4
-
-  #     # Runs a single command using the runners shell
-  #     - name: Run a one-line script
-  #       run: echo Hello, world!
-
-  #     # Runs a set of commands using the runners shell
-  #     - name: Run a multi-line script
-  #       run: |
-  #         echo Add other actions to build,
-  #         echo test, and deploy your project.
