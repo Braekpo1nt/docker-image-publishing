@@ -22,7 +22,7 @@ jobs:
       - name: Build and publish the image
         run: |
           docker login --username ${{ github.repository_owner }} --password ${{ secrets.GHCR_TOKEN }} ghcr.io
-          docker build . --tag ghcr.io/braekpo1nt/jbr_java_21:latest
+          docker build ./java/jbr_21 --tag ghcr.io/braekpo1nt/jbr_java_21:latest
           docker push ghcr.io/braekpo1nt/jbr_java_21:latest
   # # This workflow contains a single job called "build"
   # build:
