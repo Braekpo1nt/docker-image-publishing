@@ -1,9 +1,11 @@
 FROM ghcr.io/pterodactyl/yolks:java_21
 
-LABEL maintainer="braekpo1ntofficial@gmail.com"
-LABEL description="Custom Pterodactyl yolk with JetBrains Runtime (JBR) as default Java to support hotswapping remote development."
 # links this docker image to the gitlab repository where it came from, so that users can easily find information about it
-LABEL org.opencontainers.image.source https://github.com/Braekpo1nt/docker-image-publishing
+LABEL author="Braekpo1nt" \
+      maintainer="braekpo1ntofficial@gmail.com" \
+      description="Custom Pterodactyl yolk with JetBrains Runtime (JBR) as default Java to support hotswapping remote development." \
+      org.opencontainers.image.source=https://github.com/Braekpo1nt/docker-image-publishing \
+      org.opencontainers.image.licenses=MIT
 
 USER root
 
