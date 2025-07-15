@@ -31,6 +31,7 @@ jobs:
         # are referred to by "${{ matrix.tag }}"
         tag:
           - jbr_21
+          - 21_opt_jbr
     steps:
       - uses: actions/checkout@v4
       - name: Docker Setup QEMU

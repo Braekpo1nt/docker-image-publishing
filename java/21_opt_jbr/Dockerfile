@@ -4,6 +4,7 @@ FROM ghcr.io/pterodactyl/yolks:java_21
 LABEL author="Braekpo1nt" \
       maintainer="braekpo1ntofficial@gmail.com" \
       description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21" \
+      org.opencontainers.image.description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21" \
       org.opencontainers.image.source=https://github.com/Braekpo1nt/docker-image-publishing \
       org.opencontainers.image.licenses=MIT
 # links this docker image to the gitlab repository where it came from, so that users can easily find information about it
