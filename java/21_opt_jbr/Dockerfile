@@ -1,37 +1,28 @@
 # Start from the official pterodactyl yolk for Java 21
 FROM ghcr.io/pterodactyl/yolks:java_21
 
-LABEL author="Braekpo1nt" \
-      maintainer="braekpo1ntofficial@gmail.com" \
-      description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21" \
-      org.opencontainers.image.description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21" \
-      org.opencontainers.image.source=https://github.com/Braekpo1nt/docker-image-publishing \
-      org.opencontainers.image.licenses=MIT
+LABEL author="Braekpo1nt"
+LABEL maintainer="braekpo1ntofficial@gmail.com"
+LABEL description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21"
 # links this docker image to the gitlab repository where it came from, so that users can easily find information about it
+LABEL org.opencontainers.image.description="Pterodactyl yolk with JBR alongside Eclipse Temurin 21"
+LABEL org.opencontainers.image.source=https://github.com/Braekpo1nt/docker-image-publishing
+LABEL org.opencontainers.image.licenses=MIT
 
 USER root
 
-# Install dependencies if not already present
-RUN apt-get update -y \
-    && apt-get install -y curl tar unzip ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+ENV JBR_VERSION=jbr-21.0.7-linux-x64-b659.16 \
+    JBR_DIR=/opt/jbr \
+    JBR_URL=https://cache-redirector.jetbrains.com/intellij-jbr/${JBR_VERSION}.tar.gz
 
-# Define a JBR version + download URL here for maintainability
-ENV JBR_VERSION=jbr_jcef-21.0.7-linux-x64-b1038.58
-ENV JBR_URL=https://cache-redirector.jetbrains.com/intellij-jbr/${JBR_VERSION}.tar.gz
-ENV JBR_DIR=/opt/jbr
+# install JetBrains Runtime (JBR) for optional use
+RUN mkdir -p "${JBR_DIR}" \
+ && curl -fsSL "${JBR_URL}" -o /tmp/jbr.tar.gz \
+ && tar -xzf /tmp/jbr.tar.gz -C "${JBR_DIR}" --strip-components=1 \
+ && rm /tmp/jbr.tar.gz \
+ && rm -rf /var/lib/apt/lists/* \
+ && ${JBR_DIR}/bin/java --version \
+ && java --version
 
-# Download and install JBR to JBR_DIR
-RUN curl -fsSL "$JBR_URL" -o /tmp/jbr.tar.gz \
-    && mkdir -p "$JBR_DIR" \
-    && tar -xzf /tmp/jbr.tar.gz --strip-components=1 -C "$JBR_DIR" \
-    && rm -f /tmp/jbr.tar.gz
-
-# Show both Java runtimes available for inspection
-RUN echo "Default java:" && java -version || true \
-    && echo "JBR java:" && $JBR_DIR/bin/java -version || true
-
-USER container
-WORKDIR /home/container
-
-CMD ["/bin/bash", "/entrypoint.sh"]
+USER ${USER}
+WORKDIR ${HOME}
