@@ -1,5 +1,10 @@
 # docker-image-publishing
+
+This is where I create my custom yolks for [Pterodactyl](https://pterodactyl.io/). To learn about Pterodactyl eggs, yolks, and other terminology, visit the documentation page: https://pterodactyl.io/project/terms.html#terminology
+
 These images are defined in this GitHub repository: https://github.com/Braekpo1nt/docker-image-publishing
+
+You can find the links to the different pterodactyl yolks provided by this repository here: https://github.com/Braekpo1nt/docker-image-publishing/pkgs/container/yolks
 
 Used to upload my custom docker images to the ghcr.io (GitHub container registry)
 
