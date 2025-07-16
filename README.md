@@ -10,3 +10,5 @@ Docker images published using this repository are published to the GitHub Contai
 # Usage
 
 To use them, copy the identifier into your server's **Startup>Docker Image Configuration>Image** setting.
+
+For each specific version of `braekpo1nt/yolks:<version>`, navigate to its `Dockerfile` directory in this repository and read the dedicated `README.md` file.
